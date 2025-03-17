@@ -1,23 +1,58 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { useAuth } from '@/stores/auth';
+
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: HomeView,
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Auth/Login.vue'),
     },
     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/Auth/Register.vue'),
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('../views/AppLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [
+        {
+          path: '/',
+          name: 'dashboard',
+          component: () => import('../views/Pages/Dashboard.vue')
+        },
+        {
+          path: '/pages/dates',
+          name: 'dates',
+          component: () => import('../views/Pages/Dates.vue')
+        },
+        {
+          path: '/pages/users',
+          name: 'users',
+          component: () => import('../views/Pages/Users.vue')
+        },
+      ]
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/NotFound.vue'),
     },
   ],
 })
+
+router.beforeEach((to, from, next) => {
+  const auth = useAuth();
+  if (to.meta.requiresAuth && !auth.token) {
+    next({ name: 'login' });
+  } else {
+    next();
+  }
+});
 
 export default router
