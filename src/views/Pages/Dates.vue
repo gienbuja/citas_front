@@ -144,6 +144,7 @@ const loadValues = ref(true)
 const visibleNew = ref(false)
 const visibleView = ref(false)
 const visibleEdit = ref(false)
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const filters = ref(
     {
@@ -254,7 +255,6 @@ const actions = ref([
 async function fetchCitas() {
     loadValues.value = true
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.get(`${apiUrl}/citas`);
         value.value = response.data;
     } catch (error) {
@@ -274,7 +274,6 @@ function getSeverity(data) {
 
 async function newDate() {
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.post(`${apiUrl}/citas`, form.value);
         value.value.push(response.data);
         visibleNew.value = false;
@@ -285,7 +284,6 @@ async function newDate() {
 
 async function editDate() {
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
         const response = await axios.put(`${apiUrl}/citas/${formEdit.value.id}`, formEdit.value);
         const index = value.value.findIndex(cita => cita.id === formEdit.value.id);
         if (index !== -1) {
@@ -299,7 +297,6 @@ async function editDate() {
 
 async function changeStatusDate(status) {
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
         formEdit.value.estado = status
         const response = await axios.put(`${apiUrl}/citas/${formEdit.value.id}`, formEdit.value);
         const index = value.value.findIndex(cita => cita.id === formEdit.value.id);
@@ -314,7 +311,6 @@ async function changeStatusDate(status) {
 
 async function deleteDate(data) {
     try {
-        const apiUrl = import.meta.env.VITE_API_URL;
         await axios.delete(`${apiUrl}/citas/${data.id}`);
         const index = value.value.findIndex(cita => cita.id === data.id);
         if (index !== -1) {

@@ -35,11 +35,10 @@
                                         <li>
                                             <ul role="list" class="-mx-2 space-y-1">
                                                 <template v-for="item in navigation" :key="item.name">
-                                                    <li v-if="item.visible">
+                                                    <li v-if="item.visible == null ? true : item.visible">
                                                         <RouterLink :to="item.href"
                                                             :class="[route.path === item.href ? 'bg-gray-50 text-primary' : 'text-gray-700 hover:bg-gray-50 hover:text-primary', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                                                            <component :is="item.icon"
-                                                                :class="[item.current ? 'text-primary' : 'text-gray-400 group-hover:text-primary', 'size-6 shrink-0']"
+                                                            <i :class="[route.path === item.href ? 'text-primary' : 'text-gray-400 group-hover:text-primary', 'size-6 shrink-0 flex items-center', item.icon]"
                                                                 aria-hidden="true" />
                                                             {{ item.name }}
                                                         </RouterLink>
@@ -70,8 +69,7 @@
                                     <li v-if="item.visible == null ? true : item.visible">
                                         <RouterLink :to="item.href"
                                             :class="[route.path === item.href ? 'bg-gray-50 text-primary' : 'text-gray-700 hover:bg-gray-50 hover:text-primary', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
-                                            <component :is="item.icon"
-                                                :class="[route.path === item.href ? 'text-primary' : 'text-gray-400 group-hover:text-primary', 'size-6 shrink-0']"
+                                            <i :class="[route.path === item.href ? 'text-primary' : 'text-gray-400 group-hover:text-primary', 'size-6 shrink-0 flex items-center', item.icon]"
                                                 aria-hidden="true" />
                                             {{ item.name }}
                                         </RouterLink>
@@ -99,7 +97,7 @@
                 <span class="sr-only">Open sidebar</span>
                 <i class="fi fi-sr-apps text-primary"></i>
             </button>
-            <div class="flex-1 text-sm/6 font-semibold text-gray-900">Dashboard</div>
+            <div class="flex-1 text-sm/6 font-semibold text-gray-900">{{ route.name }}</div>
             <a href="#">
                 <span class="sr-only">Your profile</span>
                 <img class="size-8 rounded-full bg-gray-50"
@@ -129,10 +127,10 @@ import { RouterView, useRoute } from 'vue-router'
 const sidebarOpen = ref(false)
 const auth = useAuth();
 const route = useRoute();
-
 const navigation = ref([
-    { name: 'Dashboard', href: '/', },
-    { name: 'Citas', href: '/pages/dates', },
-    { name: 'Usuarios', href: '/pages/users', visible: auth.user.rol == 'Admin' },
+    { name: 'Dashboard', href: '/', icon: 'fi fi-sr-chart-tree-map' },
+    { name: 'Citas', href: '/pages/dates', icon: 'fi fi-rr-calendar-lines' },
+    { name: 'Usuarios', href: '/pages/users', visible: auth.user.rol == 'Admin', icon: 'fi fi-ss-users-alt' },
 ])
+
 </script>
