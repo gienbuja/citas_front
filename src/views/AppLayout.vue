@@ -78,14 +78,18 @@
                             </ul>
                         </li>
                         <li class="-mx-6 mt-auto">
-                            <a href="#"
+                            <div
                                 class="flex items-center gap-x-4 px-6 py-3 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50">
                                 <img class="size-8 rounded-full bg-gray-50"
                                     :src="'https://ui-avatars.com/api/?name=' + auth.user.name + '&background=10b981&color=fff&size=128'"
                                     alt="" />
                                 <span class="sr-only">Your profile</span>
-                                <span aria-hidden="true"> {{ auth.user.name.split(' ')[0] }}</span>
-                            </a>
+                                <span class="truncate" aria-hidden="true"> {{ auth.user.name }}</span>
+                                <button v-tooltip.top="'Cerrar sesión'" @click="auth.logout()"
+                                class="hover:bg-primary hover:text-white hover:scale-3d text-lg flex items-center border cursor-pointer border-gray-200 text-primary rounded-full p-2 size-8">
+                                    <i class="fi fi-sr-leave flex items-center" />
+                                </button>
+                            </div>
                         </li>
                     </ul>
                 </nav>
@@ -129,8 +133,8 @@ const auth = useAuth();
 const route = useRoute();
 const navigation = ref([
     { name: 'Dashboard', href: '/', icon: 'fi fi-sr-chart-tree-map' },
-    { name: 'Citas', href: '/pages/dates', icon: 'fi fi-rr-calendar-lines' },
-    { name: 'Usuarios', href: '/pages/users', visible: auth.user.rol == 'Admin', icon: 'fi fi-ss-users-alt' },
+    { name: 'Citas', href: '/pages/dates', icon: 'fi fi-sr-calendar-lines' },
+    { name: 'Usuarios', href: '/pages/users', visible: auth.user.rol == 'Admin', icon: 'fi fi-sr-users-alt' },
 ])
 
 </script>

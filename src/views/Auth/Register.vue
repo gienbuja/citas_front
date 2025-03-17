@@ -30,8 +30,13 @@ watch([email, password, name, password2], () => {
     if (password.value === password2.value) {
         errorMessage.value = '';
     }
+    if (password.value.length<8){
+        errorMessage.value = "La clave es muy corta"
+        return
+    }
     if (password.value !== password2.value) {
         errorMessage.value = 'Las contraseñas no coinciden';
+        return
     }
 });
 </script>
@@ -45,8 +50,7 @@ watch([email, password, name, password2], () => {
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
                     <div class="text-center mb-8">
                         <i class="fi fi-rr-car-mechanic text-primary text-6xl"></i>
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Bienvenido a citas
-                            rapidas!</div>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Bienvenido a el taller!</div>
                         <span class="text-muted-color font-medium">Ingresa tus datos para continuar</span>
                     </div>
 
@@ -73,6 +77,11 @@ watch([email, password, name, password2], () => {
 
                         <ErrorMessage v-if="errorMessage">{{ errorMessage }}</ErrorMessage>
                         <Button label="Registrarse e ingresar" class="w-full" @click="handleRegister"></Button>
+                        <p class="mt-6">¿Tienes cuenta? 
+                            <RouterLink to="/login" class="font-bold" >
+                                Ingresa aquí.
+                            </RouterLink>
+                        </p>
                     </div>
                 </div>
             </div>

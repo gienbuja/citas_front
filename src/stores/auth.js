@@ -42,6 +42,7 @@ export const useAuth = defineStore('auth', {
                         'Authorization': `Bearer ${this.token}`
                     }
                 });
+                router.push('/login');
             } catch (error) {
                 console.error(error);
                 throw error.response.data.error;
@@ -61,7 +62,7 @@ export const useAuth = defineStore('auth', {
                     const apiUrl = import.meta.env.VITE_API_URL;
                     const response = await axios.get(apiUrl + '/me');
                     this.user = response.data.user;
-
+                    router.push('/');
                 } catch (error) {
                     console.error(error);
                     this.logout();

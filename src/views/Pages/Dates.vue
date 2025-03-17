@@ -28,21 +28,24 @@
                     <p class="mt-1 text-gray-500">Agregue una nueva cita con el boton nueva cita.</p>
                 </div>
             </template>
-            <Column v-for="col in columns" :field="col.field" :header="col.header" :class="col.class">
-                <template #body="{ data }">
-                    <time v-if="col.type == 'date'">{{ new Date(data[col.field]).toLocaleDateString() }}</time>
-                    <Tag v-else-if="col.type == 'tag'" :severity="getSeverity(data[col.field])">
-                        {{ data[col.field] }}
-                    </Tag>
-                    <p v-else-if="col.type == 'time'">
-                        {{ data[col.field].length > 5 ? dateToTime(new Date(data[col.field])) : data[col.field] }}
-                    </p>
-                    <p class="truncate" v-else-if="col.type == 'custom'">
-                        {{ col.customField(data[col.field]) }}
-                    </p>
-                    <p v-else>{{ data[col.field] }}</p>
-                </template>
-            </Column>
+            <template v-for="col in columns">
+                <Column v-if="col.visible == null ? true : col.visible" :field="col.field" :header="col.header"
+                    :class="col.class">
+                    <template #body="{ data }">
+                        <time v-if="col.type == 'date'">{{ new Date(data[col.field]).toLocaleDateString() }}</time>
+                        <Tag v-else-if="col.type == 'tag'" :severity="getSeverity(data[col.field])">
+                            {{ data[col.field] }}
+                        </Tag>
+                        <p v-else-if="col.type == 'time'">
+                            {{ data[col.field].length > 5 ? dateToTime(new Date(data[col.field])) : data[col.field] }}
+                        </p>
+                        <p class="truncate" v-else-if="col.type == 'custom'">
+                            {{ col.customField(data[col.field]) }}
+                        </p>
+                        <p v-else>{{ data[col.field] }}</p>
+                    </template>
+                </Column>
+            </template>
             <Column v-if="actions" class="w-32">
                 <template #body="{ data }">
                     <div class="flex gap-1 justify-center">
@@ -77,7 +80,7 @@
         </div>
     </Dialog>
 
-    <Dialog v-model:visible="visibleView" modal header="Detalle de la cita" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="visibleView" modal :header="'Detalle de la cita #' + viewData.id" :style="{ width: '25rem' }">
         <div class="flex items-center gap-4 mb-4">
             <label for="fecha" class="font-semibold w-24">Fecha</label>
             <Tag severity="info" :value="new Date(viewData.fecha).toLocaleDateString()" id="fecha" class="flex-auto" />
@@ -110,8 +113,7 @@
         </div>
     </Dialog>
 
-    <Dialog v-model:visible="visibleEdit" modal header="Editar cita" :style="{ width: '25rem' }">
-        <span class="text-surface-500 dark:text-surface-400 block mb-8">Editando la cita #{{ formEdit.id }}</span>
+    <Dialog v-model:visible="visibleEdit" modal :header="'Editar cita #'+formEdit.id" :style="{ width: '25rem' }">
         <div class="flex items-center gap-4 mb-4">
             <label for="fecha" class="font-semibold w-24">Fecha</label>
             <DatePicker v-model="formEdit.fecha" :minDate="new Date(new Date().setDate(new Date().getDate() + 1))"
@@ -161,10 +163,15 @@ const form = ref({
     descripcion: ''
 })
 const formEdit = ref({})
-const viewData = ref()
+const viewData = ref({})
 const value = ref([])
 
 const columns = [
+    {
+        field: 'id',
+        header: 'ID',
+        class: 'w-20'
+    },
     {
         field: 'user',
         header: 'Usuario',
@@ -238,7 +245,7 @@ const actions = ref([
         tooltip: 'Cancelar',
         event: (data) => {
             formEdit.value = JSON.parse(JSON.stringify(data));
-            changeStatusDate('Cancelar')
+            changeStatusDate('Cancelada')
         }
     },
     {
